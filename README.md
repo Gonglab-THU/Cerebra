@@ -31,7 +31,7 @@ pip install biopython
 ## Usage
 
 * You should modify the [MSA file](example/test.a3m)
-* You should download the [model1-6 parameters](https://zenodo.org/records/10608346) and move it into the `model` folder
+* You should download the [model1-6 parameters](https://zenodo.org/doi/10.5281/zenodo.10608345) and move it into the `model` folder
 
 ```bash
 bash run.sh -i example/test.a3m -o example
