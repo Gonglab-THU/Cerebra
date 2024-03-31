@@ -18,7 +18,7 @@ cd Cerebra
 conda create -n cerebra python=3.11
 conda activate cerebra
 
-conda install pytorch cpuonly -c pytorch
+conda install pytorch 
 pip install click
 pip install numpy
 pip install ml_collections
@@ -34,6 +34,8 @@ pip install biopython
 * You should download the [model1-6 parameters](https://zenodo.org/doi/10.5281/zenodo.10608345) and move it into the `model` folder
 
 ```bash
+wget https://zenodo.org/records/10608346/files/model.zip?download=1
+tar -zcvf model.zip ./
 bash run.sh -i example/test.a3m -o example
 ```
 
