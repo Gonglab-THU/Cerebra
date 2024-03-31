@@ -14,7 +14,10 @@ from openfold.utils.tensor_utils import (
 from openfold.humodel.get_all_atoms import  hu_model_pred_to_atom14_pos,make_atom14_masks
 from openfold.np import residue_constants as rc
 
-device = torch.device('cpu')
+if torch.cuda.is_available() ==True:
+    device = torch.device('cuda:0')
+else:
+     device = torch.device('cpu')
 
 def single_pdb_write_IO(pred_all_atoms,plddt,batch,path):
     num_batch,L  = pred_all_atoms.shape[:2]
@@ -54,7 +57,7 @@ def pdb_file_write(pred_output,batch,Ancher_id,path):
     single_pdb_write_IO(all_atom_pos_14,plddt,batch,path)
 
 def get_esm(seq):
-    gpu = torch.device('cpu')
+    gpu = device
     model, alphabet = torch.hub.load('facebookresearch/esm:main', 'esm2_t36_3B_UR50D')
     batch_converter = alphabet.get_batch_converter()
     model.to(gpu)
@@ -294,10 +297,11 @@ def main(msa_file, saved_folder):
 
     batch = dataloader([['']], msa_file)
 
-    for idx in range(1, 6):
+    for idx in range(1, 2):
         model = AlphaFold(config)
-        model.load_state_dict(torch.load(f'{working_directory}/model/model{idx}.pth', map_location='cpu'))
-        model = model.to('cpu')
+        #model.load_state_dict(torch.load(f'{working_directory}/model/model{idx}.pth', map_location='cpu'))
+        model.load_state_dict(torch.load(f'{working_directory}/model/model71.pt', map_location='cpu'))
+        model = model.to(device)
         model.eval()
         
 
@@ -322,6 +326,6 @@ def main(msa_file, saved_folder):
 
         outputs['translation'][-1][0][8] = coors
         pdb_file_write(outputs, batch, 8, f'{saved_folder}/test{idx}.pdb')
-
+        print('finish prediction')
 if __name__ == '__main__':
     main()
