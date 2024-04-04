@@ -1,0 +1,131 @@
+{
+    "12e8_H": {
+        "alternative": [
+            "3jab_H",
+            "3jab_Q",
+            "12e8_H",
+            "12e8_P"
+        ],
+        "cath": [
+            "2-60-40-10-40",
+            "2-60-40-10-51"
+        ],
+        "release_date": "1998-08-05",
+        "resolution": 1.85,
+        "seq": "EVQLQQSGAEVVRSGASVKLSCTASGFNIKDYYIHWVKQRPEKGLEWIGWIDPEIGDTEYVPKFQGKATMTADTSSNTAYLQLSSLTSEDTAVYYCNAGHDYDRGRFPYWGQGTLVTVSAAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPRD"
+    },
+    "177l_A": {
+        "alternative": [
+            "178l_A",
+            "177l_A"
+        ],
+        "cath": [
+            "1-10-530-40-1"
+        ],
+        "release_date": "1995-07-10",
+        "resolution": 2.5,
+        "seq": "MNIFEMLRIDEGLRLKIYKDTEGYYTIGIGHLLTKSPSLNAAKSELDKAIGRNTNGVITKDEAEKLFNQDVDAAVRGILRNAKLKPVYDSLDAVRRAALINMVFQMGETGVAGFTNSLRMLQQKRWCEAAVNLAKSRWYNQTPNRAKRVITTFCTGTWDAYKNL"
+    },
+    "1a0g_A": {
+        "alternative": [
+            "2dab_A",
+            "2dab_B",
+            "1a0g_A",
+            "1a0g_B"
+        ],
+        "cath": [
+            "3-20-10-10-7",
+            "3-30-470-10-4"
+        ],
+        "release_date": "1998-06-03",
+        "resolution": 1.79,
+        "seq": "GYTLWNDQIVKDEEVKIDKEDRGYQFGDGVYEVVKVYNGEMFTVNEHIDRLYASAEKIRITIPYTKDKFHQLLHELVEKNELNTGHIYFQVTRGTSPRAHQFPENTVKPVIIGYTKENPRPLENLEKGVKATFVEDIRWLRCDIKSLNLLGAVLAKQEAHEKGCYEAILHRNNTVTEGSSSNVFGIKDGILYTHPANNMIAKGITRDVVIACANEINMPVKEIPFTTHEALKMDELFVTSTTSEITPVIEIDGKLIRDGKVGEWTRKLQKQFETKIPKPLHI"
+    },
+    "1a22_A": {
+        "alternative": [
+            "1hwh_A",
+            "1bp3_A",
+            "1a22_A"
+        ],
+        "cath": [
+            "1-20-1250-10-21"
+        ],
+        "release_date": "1998-04-29",
+        "resolution": 2.6,
+        "seq": "FPTIPLSRLFDNAMLRAHRLHQLAFDTYQEFEEAYIPKEQKYSFLQNPQTSLCFSESIPTPSNREETQQKSNLELLRISLLLIQSWLEPVQFLRSVFANSLVYGASDSNVYDLLKDLEERIQTLMGRLEDGSPRTGQIFKQTYSKFDTNSHNDDALLKNYGLLYCFRKDMDKVETFLRIVQCRSVEGSCGF"
+    },
+    "1a3h_A": {
+        "alternative": [
+            "3a3h_A",
+            "2a3h_A",
+            "1a3h_A"
+        ],
+        "cath": [
+            "3-20-20-80-28"
+        ],
+        "release_date": "1999-03-16",
+        "resolution": 1.57,
+        "seq": "SVVEEHGQLSISNGELVNERGEQVQLKGMSSHGLQWYGQFVNYESMKWLRDDWGINVFRAAMYTSSGGYIDDPSVKEKVKEAVEAAIDLDIYVIIDWHILSDNDPNIYKEEAKDFFDEMSELYGDYPNVIYEIANEPNGSDVTWGNQIKPYAEEVIPIIRNNDPNNIIIVGTGTWSQDVHHAADNQLADPNVMYAFHFYAGTHGQNLRDQVDYALDQGAAIFVSEWGTSAATGDGGVFLDEAQVWIDFMDERNLSWANWSLTHKDESSAALMPGANPTGGWTEAELSPSGTFVREKIRES"
+    },
+    "1a3s_A": {
+        "alternative": [
+            "1a3s_A",
+            "2o25_C",
+            "2o25_D"
+        ],
+        "cath": [
+            "3-10-110-10-2"
+        ],
+        "release_date": "1998-05-27",
+        "resolution": 2.8,
+        "seq": "GSMSGIALSRLAQERKAWRKDHPFGFVAVPTKNPDGTMNLMNWECAIPGKKGTPWEGGLFKLRMLFKDDYPSSPPKCKFEPPLFHPNVYPSGTVCLSILEEDKDWRPAITIKQILLGIQELLNEPNIQDPAQAEAYTIYCQNRVEYEKRVRAQAKKFAPS"
+    },
+    "1a5f_L": {
+        "alternative": [
+            "1a5f_L"
+        ],
+        "cath": [
+            "2-60-40-10-11",
+            "2-60-40-10-95"
+        ],
+        "release_date": "1999-04-20",
+        "resolution": 2.8,
+        "seq": "DIVMTQSPSSLTVTTGEKVTMTCKSSQSLLNSGAQKNYLTWYQQKPGQSPKLLIYWASTRESGVPDRFTGSGSGTDFTLSISGVQAEDLAVYYCQNNYNYPLTFGAGTKLELKRADAAPTVSIFPPSSEQLTSGGASVVCFLNNFYPKDINVKWKIDGSERQNGVLNSWTDQDSKDSTYSMSSTLTLTKDEYERHNSYTCEATHKTSTSPIVKSFNRNEC"
+    },
+    "1a5z_A": {
+        "alternative": [
+            "1a5z_A"
+        ],
+        "cath": [
+            "3-40-50-720-341",
+            "3-90-110-10-8"
+        ],
+        "release_date": "1999-03-23",
+        "resolution": 2.1,
+        "seq": "MKIGIVGLGRVGSSTAFALLMKGFAREMVLIDVDKKRAEGDALDLIHGTPFTRRANIYAGDYADLKGSDVVIVAAGVPQKPGETRLQLLGRNARVMKEIARNVSKYAPDSIVIVVTNPVDVLTYFFLKESGMDPRKVFGSGTVLDTARLRTLIAQHCGFSPRSVHVYVIGEHGDSEVPVWSGAMIGGIPLQNMCQVCQKCDSKILENFAEKTKRAAYEIIERKGATHYAIALAVADIVESIFFDEKRVLTLSVYLEDYLGVKDLCISVPVTLGKHGVERILELNLNEEELEAFRKSASILKNAINEITAEENKHQNTSG"
+    },
+    "1a62_A": {
+        "alternative": [
+            "1a62_A",
+            "1a63_A"
+        ],
+        "cath": [
+            "1-10-720-10-2",
+            "2-40-50-140-71"
+        ],
+        "release_date": "1998-06-17",
+        "resolution": 1.55,
+        "seq": "MNLTELKNTPVSELITLGENMGLENLARMRKQDIIFAILKQHAKSGEDIFGDGVLEILQDGFGFLRSADSSYLAGPDDIYVSPSQIRRFNLRTGDTISGKIRPPKEGERYFALLKVNEVNFDKPENARNK"
+    },
+    "1a6l_A": {
+        "alternative": [
+            "1a6l_A"
+        ],
+        "cath": [
+            "3-30-70-20-5"
+        ],
+        "release_date": "1998-05-27",
+        "resolution": 2.1,
+        "seq": "AFVVTDNCIKCKYCDCVEVCPVDCFYEGPNFLVIHPDECIDCALCEPECPAQAIFSEDEVPEDMQEFIQLNAELAEVWPNITEKKDPLPDAEDWDGVKGKLQHLER"
+    }
+}
