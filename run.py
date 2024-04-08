@@ -297,10 +297,10 @@ def main(msa_file, saved_folder):
 
     batch = dataloader([['']], msa_file)
 
-    for idx in range(1, 2):
+    for idx in range(1, 6):
         model = AlphaFold(config)
-        #model.load_state_dict(torch.load(f'{working_directory}/model/model{idx}.pth', map_location='cpu'))
-        model.load_state_dict(torch.load(f'{working_directory}/model/model71.pt', map_location='cpu'))
+        model.load_state_dict(torch.load(f'{working_directory}/model/model{idx}.pth', map_location='cpu'))
+        #model.load_state_dict(torch.load(f'{working_directory}/model/model71.pt', map_location='cpu'))
         model = model.to(device)
         model.eval()
         
