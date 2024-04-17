@@ -1,5 +1,5 @@
 <h1 align="center">Cerebra</h1>
-<p align="center">A computationally efficient framework for accurateprotein structure prediction</p>
+<p align="center">A computationally efficient framework for accurate protein structure prediction</p>
 
 ## Install software on Linux
 
