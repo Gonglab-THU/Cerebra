@@ -210,8 +210,7 @@ def run_cycle(batch, model):
     length = dims[3]
 
     n_clusters = 24
-    if length < 96:
-        n_clusters = 12
+
     if 324 >= length >= 224:
         n_clusters = 32
     if length > 324:
