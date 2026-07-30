@@ -43,7 +43,7 @@ creating the environment. CPU inference is supported, but is much slower.
 
 Cerebra model parameters will be released through Zenodo.
 
-Zenodo link: `ZENODO_LINK_TODO`
+Zenodo link: `https://zenodo.org/records/21698980`
 
 After downloading the model parameters, put them into the `checkpoint` folder:
 
@@ -227,6 +227,10 @@ If `--relax` is used, an additional relaxed structure is written as:
 ```
 
 The script also prints the mean pLDDT score for each predicted target.
+
+## Training
+
+A complete training script will be released in a later update.
 
 ## Notes
 
