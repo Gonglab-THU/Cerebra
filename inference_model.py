@@ -3,23 +3,28 @@
 """Unified Cerebra inference script.
 
 Examples:
-    python inference_model_new.py \
+    python inference_model.py \
         --fasta target.fasta \
         --model_id 1 \
         --output output_dir/
 
-    python inference_model_new.py \
+    python inference_model.py \
         --a3m target.a3m \
         --checkpoint checkpoint/model_3.pt \
         --output target_model3.pdb \
         --relax
 
-    python inference_model_new.py \
+    python inference_model.py \
+        --a3m_dir a3ms/ \
+        --model_id 1 \
+        --output predictions/
+
+    python inference_model.py \
         --fasta_dir fastas/ \
         --model_id 1 \
         --output predictions/
 
-    python inference_model_new.py \
+    python inference_model.py \
         --fasta target.fasta \
         --esm2_model /path/to/esm2_t36_3B_UR50D.pt \
         --model_id 1 \
@@ -55,6 +60,7 @@ DEFAULT_ESM2_LAYER = 36
 DEFAULT_ESM2_CHUNK_SIZE = 1022
 DEFAULT_ESM2_CHUNK_OVERLAP = 128
 FASTA_EXTENSIONS = {".fa", ".faa", ".fasta", ".fna"}
+A3M_EXTENSIONS = {".a3m"}
 
 
 class TargetInput(NamedTuple):
@@ -125,6 +131,23 @@ def discover_fasta_files(fasta_dir: Path) -> List[Path]:
         extensions = ", ".join(sorted(FASTA_EXTENSIONS))
         raise ValueError(f"No FASTA files with extensions [{extensions}] found in {fasta_dir}.")
     return fasta_files
+
+
+def discover_a3m_files(a3m_dir: Path) -> List[Path]:
+    if not a3m_dir.exists():
+        raise FileNotFoundError(f"A3M directory not found: {a3m_dir}")
+    if not a3m_dir.is_dir():
+        raise NotADirectoryError(f"--a3m_dir must be a directory: {a3m_dir}")
+
+    a3m_files = sorted(
+        path
+        for path in a3m_dir.iterdir()
+        if path.is_file() and path.suffix.lower() in A3M_EXTENSIONS
+    )
+    if not a3m_files:
+        extensions = ", ".join(sorted(A3M_EXTENSIONS))
+        raise ValueError(f"No A3M files with extensions [{extensions}] found in {a3m_dir}.")
+    return a3m_files
 
 
 def batchify_single(features: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
@@ -771,7 +794,7 @@ def resolve_output_path(
 ) -> Path:
     if force_directory:
         if output.exists() and not output.is_dir():
-            raise ValueError("--output must be a directory when --fasta_dir is used.")
+            raise ValueError("--output must be a directory when --fasta_dir or --a3m_dir is used.")
         return output / f"{target_name}_model_{model_id}.pdb"
 
     output_str = str(output)
@@ -847,7 +870,7 @@ def resolve_precision(precision: str, device: torch.device) -> str:
 
 def parse_args(argv: Optional[Sequence[str]] = None):
     parser = argparse.ArgumentParser(
-        description="Run Cerebra inference from a FASTA file, a FASTA directory, or an A3M alignment."
+        description="Run Cerebra inference from FASTA or A3M inputs."
     )
     input_group = parser.add_mutually_exclusive_group(required=True)
     input_group.add_argument("--fasta", type=Path, help="Input FASTA file for single-sequence inference.")
@@ -857,6 +880,11 @@ def parse_args(argv: Optional[Sequence[str]] = None):
         help="Directory of FASTA files for batch single-sequence inference.",
     )
     input_group.add_argument("--a3m", type=Path, help="Input A3M file for MSA-based inference.")
+    input_group.add_argument(
+        "--a3m_dir",
+        type=Path,
+        help="Directory of A3M files for batch MSA-based inference.",
+    )
 
     parser.add_argument(
         "--esm2_model",
@@ -952,10 +980,20 @@ def load_inputs(args) -> List[TargetInput]:
             targets.append(TargetInput(fasta_path, name, sequence, msa, "fasta"))
         return targets
 
-    if not args.a3m.exists():
-        raise FileNotFoundError(f"Input A3M file not found: {args.a3m}")
-    name, sequence, msa = read_a3m_input(args.a3m)
-    return [TargetInput(args.a3m, name, sequence, msa, "a3m")]
+    if args.a3m is not None:
+        if not args.a3m.exists():
+            raise FileNotFoundError(f"Input A3M file not found: {args.a3m}")
+        name, sequence, msa = read_a3m_input(args.a3m)
+        return [TargetInput(args.a3m, name, sequence, msa, "a3m")]
+
+    if args.a3m_dir is not None:
+        targets = []
+        for a3m_path in discover_a3m_files(args.a3m_dir):
+            name, sequence, msa = read_a3m_input(a3m_path)
+            targets.append(TargetInput(a3m_path, name, sequence, msa, "a3m"))
+        return targets
+
+    raise ValueError("One of --fasta, --fasta_dir, --a3m, or --a3m_dir is required.")
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
@@ -975,7 +1013,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         args.output,
         targets,
         args.model_id,
-        force_directory=(args.fasta_dir is not None),
+        force_directory=(args.fasta_dir is not None or args.a3m_dir is not None),
     )
     relax_device = args.relax_device or "cpu"
 
@@ -987,8 +1025,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print(f"MSA rows before filtering: {target.msa.shape[0]}")
         print(f"Output: {output_paths[0]}")
     else:
-        print("Input type: fasta_dir")
-        print(f"Targets: {len(targets)} FASTA files")
+        input_type = "fasta_dir" if args.fasta_dir is not None else "a3m_dir"
+        input_label = "FASTA" if args.fasta_dir is not None else "A3M"
+        print(f"Input type: {input_type}")
+        print(f"Targets: {len(targets)} {input_label} files")
         print(f"Output directory: {args.output.resolve()}")
 
     start_time = time.perf_counter()

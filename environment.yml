@@ -1,0 +1,55 @@
+# Cerebra inference environment.
+#
+# The local conda prefix and low-level system libraries are intentionally not
+# included, so the file can be used on another Linux machine.
+#
+# Create the environment with:
+#   conda env create -f environment.yml
+#
+# PyTorch is pinned to the CUDA 12.8 wheel family used by the source
+# environment. For a CPU-only installation, replace the PyTorch index and torch
+# package line according to the official PyTorch installation matrix.
+
+name: cerebra_MSA
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.11
+  - pip
+  - numpy=2.4
+  - scipy=1.17
+  - h5py=3.16
+  - biopython=1.87
+  - scikit-learn=1.9
+  - openmm=8.5
+  - pdbfixer=1.12
+  - packaging
+  - pyyaml
+  - setuptools
+  - wheel
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu128
+      - torch==2.9.1+cu128
+      - absl-py==2.5.0
+      - attrs==26.1.0
+      - click==8.4.2
+      - dm-tree==0.1.10
+      - einops==0.8.2
+      - fair-esm==2.0.0
+      - filelock==3.29.0
+      - fsspec==2026.4.0
+      - jinja2==3.1.6
+      - joblib==1.5.3
+      - ml-collections==1.1.0
+      - networkx==3.6.1
+      - pillow==12.2.0
+      - safetensors
+      - sympy==1.14.0
+      - threadpoolctl==3.6.0
+      - transformers>=4.40
+      - triton==3.5.1
+      - typing-extensions==4.15.0
+      - wrapt==2.2.2

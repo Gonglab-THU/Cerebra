@@ -412,65 +412,61 @@ class PathSynthesis(nn.Module):
         # quaternion: [head, batch, k, length, 4]
         # AncherList: eg [1, 2, 3]
         
-        # ---------------- 保持原有的数据准备逻辑 ----------------
+        # ---------------- Data preparation ----------------
         head, batch, k, length, _ = quaternion.shape
 
-        # Step 1: 构建两两配对的旋转矩阵 [head, batch, k(Anchor), k(Ref), length, 4]
-        # 注意：这里假设SelectAncher和NormQuaternionMM是你原本可用的函数
-        # q_step1_1 代表“参考系”的姿态，q_step1_2 代表“目标”的姿态
+        # Step 1: Build pairwise rotations: [head, batch, k(anchor), k(ref), length, 4]
+        # SelectAncher and NormQuaternionMM are assumed to be available.
+        # q_step1_1 is the reference pose; q_step1_2 is the target pose.
         q_step1_1 = SelectAncher(quaternion, AncherList, SelectAxis=3, BatchAxis=1).unsqueeze(4)
         q_step1_2 = quaternion.unsqueeze(2)
         
-        # 计算相对旋转或者组合旋转 (取决于你NormQuaternionMM的物理定义)
-        # 假设这里输出的是 k*k 套对于 length 个残基的预测
+        # Compute relative or composed rotations, depending on NormQuaternionMM.
+        # Output k*k predictions for each residue.
         q_step1 = NormQuaternionMM(q_step1_1, q_step1_2) 
         q_step1 = q_step1.reshape(head, batch, k, k, length, 4)
 
-        # Step 2: 计算注意力权重
-        # 注意力通常需要Softmax归一化，否则插值会变成缩放
+        # Step 2: Compute normalized attention weights.
         atten = self.weight_quaternion(torch.cat([affinity, q_step1], dim=-1)) # [..., 1]
 
 
-        # ---------------- 李代数插值核心逻辑 (替换原 sum) ----------------
+        # ---------------- Lie algebra interpolation ----------------
         
-        # 1. 选取基准点 (Reference Frame)
-        # 为了稳定，我们选取第一个参考系作为切空间的原点
+        # 1. Use a reference frame as the tangent-space origin.
         # q_base: [head, batch, k, 1, length, 4]
         q_base = q_step1[:, :, :, 8:9, :, :] 
 
-        # 2. 符号对齐 (Double Cover Alignment)
-        # 如果 q_i 和 q_base 点积为负，说明它们在球面上是相对的，需要翻转 q_i
+        # 2. Align quaternion signs to handle double covering.
         dot_prod = torch.sum(q_step1 * q_base, dim=-1, keepdim=True)
         q_aligned = torch.where(dot_prod < 0, -q_step1, q_step1)
 
-        # 3. 计算相对于基准点的"差异旋转" (Relative Rotation)
+        # 3. Compute rotations relative to the reference.
         # delta_q = q_base^-1 * q_aligned
         q_base_inv = LieOps.quat_inv(q_base)
         q_delta = LieOps.quat_multiply(q_base_inv, q_aligned)
 
-        # 4. 映射到李代数空间 (切空间)
+        # 4. Map to the Lie algebra (tangent space).
         # v_delta: [head, batch, k, k, length, 3]
         v_delta = LieOps.log_map(q_delta)
 
-        # 5. 在切空间进行线性加权 (Weighted Sum in Tangent Space)
+        # 5. Compute the weighted mean in tangent space.
         # atten: [..., k, 1], v_delta: [..., k, 3] -> sum dim 3
         v_mean = torch.sum(atten * v_delta, dim=3) # [head, batch, k, length, 3]
 
-        # 6. 映射回李群并应用到基准点
+        # 6. Map back to the Lie group and apply the reference.
         # q_mean_delta: [head, batch, k, length, 4]
         q_mean_delta = LieOps.exp_map(v_mean)
         
-        # 最终结果 q = q_base * exp(mean(log(base^-1 * q_i)))
+        # q = q_base * exp(mean(log(base^-1 * q_i)))
         q_final = LieOps.quat_multiply(q_base.squeeze(3), q_mean_delta)
-        q_final = F.normalize(q_final, dim=-1) # 确保数值精度
+        q_final = F.normalize(q_final, dim=-1) # Preserve numerical precision.
 
-        # ---------------- 方差/Loss 计算 ----------------
-        # 计算预测的一致性/方差。
-        # 原逻辑: (q_step1 - q)^2
-        # 李代数逻辑: 可以计算 tangent 空间的距离，但为了兼容你的 Loss 量级，
-        # 我们依然可以用欧氏距离来近似这里的"离散度"
+        # ---------------- Variance/loss ----------------
+        # Measure prediction consistency.
+        # Original: (q_step1 - q)^2
+        # Use Euclidean distance to preserve the existing loss scale.
         
-        # 注意：这里需要用对齐后的 q_aligned 来减，否则会有 +/- 符号导致的虚假方差
+        # Use q_aligned to avoid variance caused by sign ambiguity.
         quaternion_est = q_aligned - q_final.unsqueeze(3).detach()
         quaternion_est = (quaternion_est ** 2).sum(-1).mean(dim=(0, 3))
 
