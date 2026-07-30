@@ -43,7 +43,7 @@ creating the environment. CPU inference is supported, but is much slower.
 
 Cerebra model parameters will be released through Zenodo.
 
-Zenodo link: `https://zenodo.org/records/21698980`
+Zenodo link: [https://zenodo.org/records/21698980](https://zenodo.org/records/21698980)
 
 After downloading the model parameters, put them into the `checkpoint` folder:
 
